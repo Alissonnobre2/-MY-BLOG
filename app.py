@@ -288,4 +288,3 @@ st.markdown(
     "<center><h3>🌻 Let's Learn Together!</h3></center>",
     unsafe_allow_html=True,
 )
-)
