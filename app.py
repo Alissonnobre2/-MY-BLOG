@@ -1,48 +1,61 @@
 import streamlit as st
 
-# ==========================================================
-# CONFIGURAÇÃO DA PÁGINA
-# ==========================================================
+# =========================================================
+# CONFIGURAÇÃO
+# =========================================================
 
 st.set_page_config(
     page_title="Only English Time",
     page_icon="🌻",
-    layout="wide"
+    layout="wide",
 )
 
-# ==========================================================
+# =========================================================
 # CSS
-# ==========================================================
+# =========================================================
 
 st.markdown("""
 <style>
 
-/* Esconde elementos do Streamlit */
+/* ============================
+   Esconde elementos Streamlit
+===============================*/
+
 #MainMenu {visibility:hidden;}
 footer {visibility:hidden;}
 header {visibility:hidden;}
 
-/* Área principal */
+/* ============================
+   Página
+===============================*/
+
 .block-container{
-    max-width:1100px;
+    max-width:1200px;
     padding-top:2rem;
 }
 
-/* Sidebar */
+/* ============================
+   Sidebar
+===============================*/
 
 section[data-testid="stSidebar"]{
-    border-right:2px solid #262730;
+    border-right:3px solid #262730;
 }
 
-/* Título */
+section[data-testid="stSidebar"] img{
+    border-radius:50%;
+}
+
+/* ============================
+   Header
+===============================*/
 
 .title{
     text-align:center;
-    font-size:58px;
-    font-weight:800;
-    letter-spacing:4px;
+    font-size:60px;
+    font-weight:900;
+    letter-spacing:5px;
     color:#262730;
-    margin-bottom:0;
 }
 
 .subtitle{
@@ -53,154 +66,197 @@ section[data-testid="stSidebar"]{
     margin-bottom:30px;
 }
 
-/* Menu */
+/* ============================
+   Menu
+===============================*/
 
 .menu{
     display:flex;
     justify-content:center;
-    gap:18px;
-    margin-bottom:35px;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:40px;
 }
 
-.item{
+.menu-item{
+
     background:white;
+
     padding:10px 22px;
+
     border-radius:30px;
+
     border:2px solid #262730;
+
     font-weight:bold;
-    transition:0.3s;
+
+    transition:0.25s;
+
 }
 
-.item:hover{
+.menu-item:hover{
+
     background:#1E88E5;
+
     color:white;
+
 }
 
-/* Card do post */
+/* ============================
+   Cartão do Post
+===============================*/
 
 .post{
+
     background:white;
+
     padding:35px;
-    border-radius:18px;
-    box-shadow:0px 4px 12px rgba(0,0,0,.10);
+
+    border-radius:20px;
+
+    box-shadow:0px 8px 20px rgba(0,0,0,.15);
+
 }
 
-.post-title{
-    font-size:36px;
-    font-weight:bold;
-    color:#262730;
+.post h2{
+
+    margin-top:0;
+
 }
 
 .word{
+
+    margin-top:30px;
+
     background:#E3F2FD;
-    border-left:6px solid #1E88E5;
-    padding:15px;
-    border-radius:8px;
-    margin-top:25px;
+
+    border-left:8px solid #1E88E5;
+
+    padding:18px;
+
+    border-radius:10px;
+
 }
 
 .caption{
+
     text-align:center;
+
     color:gray;
+
     font-size:14px;
+
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================================================
+# =========================================================
 # SIDEBAR
-# ==========================================================
+# =========================================================
 
 with st.sidebar:
 
     try:
         st.image("student.jpg", use_container_width=True)
     except:
-        st.info("📷 Add **student.jpg** to your project.")
+        st.info("📷 Add your image as student.jpg")
 
-    st.markdown("## About Me")
+    st.markdown("## 👋 About Me")
 
     st.write("""
 Hello!
 
-I'm an English student passionate about learning English.
+I'm an English student.
+
+Welcome to my blog.
 
 Here I share:
 
-- 📚 Daily vocabulary
-- ✍️ Writing practice
+- 📚 Daily Vocabulary
+- ✍ Writing Practice
 - 📖 Grammar
-- 💡 English tips
+- 💡 English Tips
+- 🎯 Learning Goals
 """)
 
     st.button("Say Hello 👋", use_container_width=True)
 
-# ==========================================================
-# CABEÇALHO
-# ==========================================================
+# =========================================================
+# HEADER
+# =========================================================
 
 st.markdown(
     "<div class='title'>ONLY ENGLISH TIME</div>",
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 st.markdown(
     "<div class='subtitle'>Blog for sharing my English learning experience</div>",
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 st.markdown("""
 <div class="menu">
 
-<div class="item">CREED</div>
+<div class="menu-item">HOME</div>
 
-<div class="item">REPORT</div>
+<div class="menu-item">VOCABULARY</div>
 
-<div class="item">LESSON</div>
+<div class="menu-item">GRAMMAR</div>
 
-<div class="item">INTERVIEW</div>
+<div class="menu-item">WRITING</div>
+
+<div class="menu-item">ABOUT</div>
 
 </div>
 """, unsafe_allow_html=True)
 
-# ==========================================================
-# CONTEÚDO
-# ==========================================================
+# =========================================================
+# POST
+# =========================================================
 
-col1, col2 = st.columns([2.3,1])
+left,right = st.columns([2.2,1])
 
-with col1:
+with left:
 
     st.markdown("""
+
 <div class="post">
 
-<div class="post-title">
-📖 My First Day Writing in English
-</div>
+<h2>📖 My First Day Writing in English</h2>
 
-<br>
+<p><i>Published Today</i></p>
 
 Welcome to my first blog!
 
-I created this page to practice English every day and share my progress.
+I created this page to practice English every day and share my learning journey.
 
 <h4>Today's Goals</h4>
 
 <ul>
+
 <li>Write in English.</li>
+
 <li>Learn three new words.</li>
+
 <li>Practice grammar.</li>
-<li>Never be afraid of making mistakes.</li>
+
+<li>Read an English article.</li>
+
 </ul>
 
 <div class="word">
 
-<b>📘 Word of the Day</b><br><br>
+<h4>📘 Word of the Day</h4>
 
-<b>Breathtaking</b><br>
+<b>Breathtaking</b>
 
-Meaning: Something extremely beautiful or surprising.
+<br><br>
+
+Meaning:
+
+Something extremely beautiful or surprising.
 
 </div>
 
@@ -208,23 +264,28 @@ Meaning: Something extremely beautiful or surprising.
 
 """, unsafe_allow_html=True)
 
-with col2:
+with right:
 
     st.image(
         "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=700",
-        use_container_width=True
+        use_container_width=True,
     )
 
     st.markdown(
-        "<p class='caption'>This image represents my English learning journey.</p>",
-        unsafe_allow_html=True
+        "<p class='caption'>Learning English every day.</p>",
+        unsafe_allow_html=True,
     )
 
-    st.button("Read More", use_container_width=True)
+    st.metric("Posts", "01")
+
+    st.metric("Words Learned", "03")
+
+    st.metric("Days Studying", "01")
 
 st.divider()
 
 st.markdown(
-    "<center><h4>🌻 Let's learn together!</h4></center>",
-    unsafe_allow_html=True
+    "<center><h3>🌻 Let's Learn Together!</h3></center>",
+    unsafe_allow_html=True,
+)
 )
