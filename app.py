@@ -284,8 +284,7 @@ with right:
 
 st.divider()
 
-st.markdown(
-    "<center><h3>🌻 Let's Learn Together!</h3></center>",
-    unsafe_allow_html=True,
-)
-)
+st.image(
+    "imagem.jpg",
+    use_container_width=True,
+))
