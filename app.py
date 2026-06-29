@@ -157,30 +157,38 @@ section[data-testid="stSidebar"] img{
 
 with st.sidebar:
 
-    try:
-        st.image("student.jpg", use_container_width=True)
-    except:
-        st.info("📷 Add your image as student.jpg")
+    st.markdown("## 👩 About Me")
 
-    st.markdown("## 👋 About Me")
+    try:
+        st.image("student.jpg", width=220)
+    except:
+        st.warning("Add the file student.jpg")
+
+    st.markdown("---")
 
     st.write("""
-Hello!
+Hello! 👋
 
-I'm an English student.
+My name is Maria.
 
-Welcome to my blog.
+I'm an English student and this blog is where I document my learning journey.
 
-Here I share:
+### Here you'll find:
 
-- 📚 Daily Vocabulary
-- ✍ Writing Practice
-- 📖 Grammar
-- 💡 English Tips
-- 🎯 Learning Goals
-""")
+📚 Daily Vocabulary
 
-    st.button("Say Hello 👋", use_container_width=True)
+✍️ Writing Practice
+
+📖 Grammar Tips
+
+💡 English Expressions
+
+🎯 Study Goals
+
+🌎 My Progress
+    """)
+
+    st.button("🌻 Follow My Journey", use_container_width=True)
 
 # =========================================================
 # HEADER
