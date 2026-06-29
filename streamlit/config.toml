@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#1E88E5"          # 10% Azul (botões e links)
+backgroundColor = "#FFEB3B"       # 60% Amarelo (fundo principal)
+secondaryBackgroundColor = "#FFFFFF" # 30% Branco (barra lateral)
+textColor = "#262730"             # Cor do texto
+font = "sans serif"
