@@ -1,40 +1,56 @@
 import streamlit as st
 
+# ==========================================================
+# CONFIGURAÇÃO DA PÁGINA
+# ==========================================================
+
 st.set_page_config(
     page_title="Only English Time",
     page_icon="🌻",
     layout="wide"
 )
 
-# ---------------- CSS ----------------
+# ==========================================================
+# CSS
+# ==========================================================
 
 st.markdown("""
 <style>
 
+/* Esconde elementos do Streamlit */
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+header {visibility:hidden;}
+
+/* Área principal */
 .block-container{
-    padding-top:2rem;
     max-width:1100px;
+    padding-top:2rem;
 }
 
-/* Remove espaços */
-section.main > div{
-    padding-top:1rem;
+/* Sidebar */
+
+section[data-testid="stSidebar"]{
+    border-right:2px solid #262730;
 }
 
 /* Título */
 
 .title{
     text-align:center;
-    font-size:55px;
-    font-weight:bold;
+    font-size:58px;
+    font-weight:800;
     letter-spacing:4px;
+    color:#262730;
+    margin-bottom:0;
 }
 
 .subtitle{
     text-align:center;
-    font-size:22px;
-    margin-top:-20px;
-    color:#444;
+    font-size:20px;
+    color:#555;
+    margin-top:-15px;
+    margin-bottom:30px;
 }
 
 /* Menu */
@@ -42,74 +58,87 @@ section.main > div{
 .menu{
     display:flex;
     justify-content:center;
-    gap:20px;
-    margin-top:25px;
-    margin-bottom:40px;
+    gap:18px;
+    margin-bottom:35px;
 }
 
 .item{
     background:white;
-    padding:8px 20px;
+    padding:10px 22px;
     border-radius:30px;
-    border:2px solid black;
+    border:2px solid #262730;
     font-weight:bold;
+    transition:0.3s;
 }
 
-/* Post */
-
-.post-title{
-    font-size:35px;
-    font-weight:bold;
+.item:hover{
+    background:#1E88E5;
+    color:white;
 }
+
+/* Card do post */
 
 .post{
     background:white;
-    padding:30px;
-    border-radius:15px;
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0px 4px 12px rgba(0,0,0,.10);
+}
+
+.post-title{
+    font-size:36px;
+    font-weight:bold;
+    color:#262730;
 }
 
 .word{
     background:#E3F2FD;
+    border-left:6px solid #1E88E5;
     padding:15px;
-    border-radius:10px;
-    margin-top:20px;
+    border-radius:8px;
+    margin-top:25px;
 }
 
-/* Sidebar */
-
-section[data-testid="stSidebar"]{
-    border-right:3px solid black;
+.caption{
+    text-align:center;
+    color:gray;
+    font-size:14px;
 }
 
 </style>
-
 """, unsafe_allow_html=True)
 
-# ---------------- Sidebar ----------------
+# ==========================================================
+# SIDEBAR
+# ==========================================================
 
 with st.sidebar:
 
-    st.image(
-        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-        width=130
-    )
+    try:
+        st.image("student.jpg", use_container_width=True)
+    except:
+        st.info("📷 Add **student.jpg** to your project.")
 
     st.markdown("## About Me")
 
     st.write("""
 Hello!
 
-I'm an English student.
+I'm an English student passionate about learning English.
 
 Here I share:
 
-- Daily vocabulary
-- Grammar
-- Writing practice
-- English tips
+- 📚 Daily vocabulary
+- ✍️ Writing practice
+- 📖 Grammar
+- 💡 English tips
 """)
 
-# ---------------- Cabeçalho ----------------
+    st.button("Say Hello 👋", use_container_width=True)
+
+# ==========================================================
+# CABEÇALHO
+# ==========================================================
 
 st.markdown(
     "<div class='title'>ONLY ENGLISH TIME</div>",
@@ -135,9 +164,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- Conteúdo ----------------
+# ==========================================================
+# CONTEÚDO
+# ==========================================================
 
-col1,col2 = st.columns([2,1])
+col1, col2 = st.columns([2.3,1])
 
 with col1:
 
@@ -145,9 +176,7 @@ with col1:
 <div class="post">
 
 <div class="post-title">
-
 📖 My First Day Writing in English
-
 </div>
 
 <br>
@@ -156,20 +185,22 @@ Welcome to my first blog!
 
 I created this page to practice English every day and share my progress.
 
-### Today's goals
+<h4>Today's Goals</h4>
 
-- Write in English.
-- Learn three new words.
-- Practice grammar.
+<ul>
+<li>Write in English.</li>
+<li>Learn three new words.</li>
+<li>Practice grammar.</li>
+<li>Never be afraid of making mistakes.</li>
+</ul>
 
 <div class="word">
 
-<b>Word of the Day</b>
+<b>📘 Word of the Day</b><br><br>
 
-<b>Breathtaking</b>
+<b>Breathtaking</b><br>
 
-Meaning:
-Something extremely beautiful or surprising.
+Meaning: Something extremely beautiful or surprising.
 
 </div>
 
@@ -180,28 +211,20 @@ Something extremely beautiful or surprising.
 with col2:
 
     st.image(
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=700",
         use_container_width=True
     )
 
-    st.write("This image represents my English learning journey.")
+    st.markdown(
+        "<p class='caption'>This image represents my English learning journey.</p>",
+        unsafe_allow_html=True
+    )
 
-hide = """
-<style>
+    st.button("Read More", use_container_width=True)
 
-#MainMenu{
-    visibility:hidden;
-}
+st.divider()
 
-footer{
-    visibility:hidden;
-}
-
-header{
-    visibility:hidden;
-}
-
-</style>
-"""
-
-st.markdown(hide, unsafe_allow_html=True)
+st.markdown(
+    "<center><h4>🌻 Let's learn together!</h4></center>",
+    unsafe_allow_html=True
+)
