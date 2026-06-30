@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 
 # =========================================================
 # CONFIG
@@ -472,7 +472,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 menu_cols = st.columns(5)
-menu_items = ["HOME", "VOCABULARY", "GRAMMAR", "WRITING", "ABOUT"]
+# Alterado conforme solicitado:
+menu_items = ["HOME", "PEDAGOGICAL CREED", "PEDAGOGICAL INTERVENTION PLAN", "OBSERVATION REPORT", "ABOUT"]
 for col, item in zip(menu_cols, menu_items):
     with col:
         st.button(item, use_container_width=True, on_click=go_to, args=(item,))
@@ -523,10 +524,16 @@ if st.session_state.page == "HOME":
         st.markdown('<div class="eyebrow">FROM MY INTERNSHIP — ESTÁGIO I</div>', unsafe_allow_html=True)
         for key, work in st.session_state.ACADEMIC_WORK.items():
             with st.container(border=True):
-                st.markdown(f"**{work['title']}**  \n*{work['subtitle']}*")
+                st.markdown(f"**{work['title']}** \n*{work['subtitle']}*")
                 st.markdown(status_pill(work["status"]), unsafe_allow_html=True)
                 if st.button("Read more →", key=f"home_read_{key}"):
-                    go_to("WRITING")
+                    # Redireciona para as novas páginas correspondentes
+                    if key == "creed":
+                        go_to("PEDAGOGICAL CREED")
+                    elif key == "pip":
+                        go_to("PEDAGOGICAL INTERVENTION PLAN")
+                    elif key == "observation":
+                        go_to("OBSERVATION REPORT")
                     st.rerun()
 
         word_obj = st.session_state.VOCAB[0] if st.session_state.VOCAB else {"word": "---", "meaning": "---", "example": "---"}
@@ -566,89 +573,30 @@ if st.session_state.page == "HOME":
             """, unsafe_allow_html=True)
 
 # =========================================================
-# PAGE: VOCABULARY
+# PAGE: PEDAGOGICAL CREED (Antigo VOCABULARY)
 # =========================================================
-elif st.session_state.page == "VOCABULARY":
-    st.markdown('<div class="eyebrow">VOCABULARY</div>', unsafe_allow_html=True)
-    st.markdown('<h2 class="serif">Words I\'ve Learned</h2>', unsafe_allow_html=True)
-    for v in st.session_state.VOCAB:
-        st.markdown(f"""
-        <div class="card">
-            <div class="icon-circle">📘</div>
-            <h3>{v['word']}</h3>
-            <p><b>Meaning:</b> {v['meaning']}</p>
-            <p><i>Example: {v['example']}</i></p>
-        </div>
-        """, unsafe_allow_html=True)
-
-# =========================================================
-# PAGE: GRAMMAR
-# =========================================================
-elif st.session_state.page == "GRAMMAR":
-    st.markdown('<div class="eyebrow">GRAMMAR</div>', unsafe_allow_html=True)
-    st.markdown('<h2 class="serif">Grammar Tips</h2>', unsafe_allow_html=True)
-    for g in st.session_state.GRAMMAR_TIPS:
-        with st.expander(g["title"]):
-            st.write(g["text"])
-
-# =========================================================
-# PAGE: WRITING  → Pedagogical Creed / PIP / Observation Report
-# =========================================================
-elif st.session_state.page == "WRITING":
+elif st.session_state.page == "PEDAGOGICAL CREED":
     st.markdown('<div class="eyebrow">ESTÁGIO I — HL 0070</div>', unsafe_allow_html=True)
-    st.markdown('<h2 class="serif">My Internship Deliverables</h2>', unsafe_allow_html=True)
-    st.write("Three pieces of work from my observational internship at CCI Benfica, supervised by Dra. Lidia Cardoso (UFC DELILT).")
+    render_academic_card(st.session_state.ACADEMIC_WORK["creed"])
 
-    tab1, tab2, tab3 = st.tabs(["🎓 Pedagogical Creed", "📋 Intervention Plan (PIP)", "👀 Observation Report"])
-    with tab1:
-        render_academic_card(st.session_state.ACADEMIC_WORK["creed"])
-    with tab2:
-        render_academic_card(st.session_state.ACADEMIC_WORK["pip"])
-    with tab3:
-        render_academic_card(st.session_state.ACADEMIC_WORK["observation"])
+# =========================================================
+# PAGE: PEDAGOGICAL INTERVENTION PLAN (Antigo GRAMMAR)
+# =========================================================
+elif st.session_state.page == "PEDAGOGICAL INTERVENTION PLAN":
+    st.markdown('<div class="eyebrow">ESTÁGIO I — HL 0070</div>', unsafe_allow_html=True)
+    render_academic_card(st.session_state.ACADEMIC_WORK["pip"])
+
+# =========================================================
+# PAGE: OBSERVATION REPORT (Antigo WRITING)
+# =========================================================
+elif st.session_state.page == "OBSERVATION REPORT":
+    st.markdown('<div class="eyebrow">ESTÁGIO I — HL 0070</div>', unsafe_allow_html=True)
+    render_academic_card(st.session_state.ACADEMIC_WORK["observation"])
 
 # =========================================================
 # PAGE: ABOUT
 # =========================================================
 elif st.session_state.page == "ABOUT":
     st.markdown('<div class="eyebrow">ABOUT ME</div>', unsafe_allow_html=True)
-    st.markdown('<h2 class="serif">Future Educator, <i>Language Enthusiast</i></h2>', unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        try:
-            st.image("student.jpg", width=250)
-        except Exception:
-            st.warning("Add the file student.jpg")
-    with col2:
-        st.write("""
-        Hi, I'm **Ana Sigrid**! I'm a 5th semester Letras/Inglês student at the Universidade Federal do Ceará (UFC)
-        and an English teacher with about 6 months of classroom experience. This blog documents my journey through
-        Estágio I — my observational internship — from the Pedagogical Creed and Intervention Plan I've written
-        to the Observation Report I'm currently finishing.
-
-        **My goals:**
-        - Complete Estágio I with a strong, reflective portfolio
-        - Keep growing as both an English learner and an English teacher
-        - Apply the "English Only Time" intervention in real classrooms
-        """)
-        st.progress(35, text="Progress toward fluency & teaching goals")
-
-    st.write("")
-    st.markdown('<div class="eyebrow">ACADEMIC JOURNEY</div>', unsafe_allow_html=True)
-    st.markdown('<h2 class="serif">Where I Have Been Learning</h2>', unsafe_allow_html=True)
-    j1, j2, j3 = st.columns(3)
-    for col, j in zip([j1, j2, j3], st.session_state.JOURNEY):
-        with col:
-            lines = j["items"].split("\n")
-            items_html = "".join(f"<div class='checkline'><b>✓</b> {line}</div>" for line in lines if line.strip())
-            st.markdown(f"""
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div class="icon-circle">{j['icon']}</div>
-                    <span class="pill">{j['status']}</span>
-                </div>
-                <h3 style="margin-bottom:0;">{j['title']}</h3>
-                <p class="caption-muted" style="text-align:left; margin-top:2px;">{j['subtitle']}</p>
-                {items_html}
-            </div>
-            """, unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">My Profile</h2>', unsafe_allow_html=True)
+    st.write("Section content goes here.")
