@@ -21,15 +21,15 @@ def go_to(page_name: str):
     st.session_state.page = page_name
 
 # Inicializa os dados na sessão caso não existam (Permite alteração em tempo de execução)
-if "VOCAB" not in st.session_state:
-    st.session_state.VOCAB = [
+if "PEDAGOGIGAL_CREED" not in st.session_state:
+    st.session_state.PEDAGOGIGAL_CREED = [
         {"word": "Breathtaking", "meaning": "Something extremely beautiful or surprising.", "example": "The sunset over the mountains was breathtaking."},
         {"word": "Resilient", "meaning": "Able to recover quickly from difficulties.", "example": "She stayed resilient even after losing her job."},
         {"word": "Overwhelmed", "meaning": "Having too much to deal with at once.", "example": "I felt overwhelmed by all the homework this week."},
         {"word": "Scaffolding", "meaning": "Temporary support (models, vocabulary, feedback) given to help a learner perform a task.", "example": "The teacher used scaffolding to help students join the discussion in English."},
     ]
-if "GRAMMAR_TIPS" not in st.session_state:
-    st.session_state.GRAMMAR_TIPS = [
+if "PEDAGOGICAL_INTERVENTION_PLAN" not in st.session_state:
+    st.session_state.PEDAGOGICAL_INTERVENTION_PLAN = [
         {"title": "Present Perfect vs Past Simple", "text": "Use Present Perfect for actions connected to now ('I have studied English for 2 years'); use Past Simple for finished actions with a specific time ('I studied English in 2022')."},
         {"title": "Articles: A / An / The", "text": "Use 'a/an' for something not specific or mentioned for the first time. Use 'the' when both speaker and listener know exactly what is being referred to."},
         {"title": "Common mistake: Make vs Do", "text": "'Make' is for creating something (make a cake, make a decision). 'Do' is for activities/tasks (do homework, do exercise)."},
