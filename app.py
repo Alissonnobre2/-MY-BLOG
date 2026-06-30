@@ -116,7 +116,27 @@ if "ACADEMIC_WORK" not in st.session_state:
         },
     }
 
-
+if "JOURNEY" not in st.session_state:
+    st.session_state.JOURNEY = [
+        {
+            "icon": "🎓", "status": "5th semester",
+            "title": "Letras: English Language & Literature",
+            "subtitle": "Universidade Federal do Ceará (UFC) · 2023 – present",
+            "items": "Applied Linguistics\nEnglish Literature\nESL Teaching Methods (HL 0070)\nAcademic Writing in English",
+        },
+        {
+            "icon": "📖", "status": "Ongoing",
+            "title": "Estágio I — Observação e Elaboração de Projetos",
+            "subtitle": "HL 0070 · UFC DELILT · CCI Benfica · 2026.1",
+            "items": "Observation of 3 EFL classes at CCI Benfica\nPedagogical Creed (completed)\nPedagogical Intervention Plan — co-authored (completed)\nObservation Report (in progress)",
+        },
+        {
+            "icon": "👩‍🏫", "status": "~6 months",
+            "title": "English Teacher — Private Language Institute",
+            "subtitle": "Bilingual CLIL Program (BNCC) · Students aged 6–10",
+            "items": "Primary Bilingual Program (UNOi)\nTask-Based Language Teaching\nClasses of 10–15 students, 3x/week\nFormative & summative assessment",
+        },
+    ]
 
 # =========================================================
 # DESIGN SYSTEM — navy & gold
