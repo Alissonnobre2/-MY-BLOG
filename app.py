@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# SESSION STATE (controls which page is active)
+# SESSION STATE
 # =========================================================
 if "page" not in st.session_state:
     st.session_state.page = "HOME"
@@ -19,97 +19,230 @@ def go_to(page_name: str):
     st.session_state.page = page_name
 
 # =========================================================
-# CSS
+# DESIGN SYSTEM — navy & gold
 # =========================================================
 st.markdown("""
 <style>
-/* Hide default Streamlit chrome */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+    --navy:#1B2A4A;
+    --navy-light:#27406e;
+    --gold:#D9A441;
+    --gold-light:#F8EFD9;
+    --bg:#F7F8FA;
+    --text:#1B2A4A;
+    --muted:#6B7280;
+}
+
+html, body, [class*="css"]{
+    font-family:'Inter', sans-serif;
+    color:var(--text);
+}
+
 #MainMenu {visibility:hidden;}
 footer {visibility:hidden;}
 header {visibility:hidden;}
 
-.block-container{
-    max-width:1200px;
-    padding-top:2rem;
+.stApp{
+    background:var(--bg);
 }
 
+.block-container{
+    max-width:1180px;
+    padding-top:1.2rem;
+}
+
+/* ---------- Sidebar ---------- */
 section[data-testid="stSidebar"]{
-    border-right:3px solid #262730;
+    background:var(--navy);
+    border-right:none;
+}
+section[data-testid="stSidebar"] *{
+    color:#EDEFF5 !important;
 }
 section[data-testid="stSidebar"] img{
-    border-radius:50%;
+    border-radius:14px;
+    border:3px solid var(--gold);
+}
+section[data-testid="stSidebar"] hr{
+    border-color:rgba(255,255,255,.15);
+}
+section[data-testid="stSidebar"] button{
+    background:var(--gold) !important;
+    color:var(--navy) !important;
+    border:none !important;
+    font-weight:700 !important;
+    border-radius:30px !important;
 }
 
-.title{
-    text-align:center;
-    font-size:60px;
-    font-weight:900;
-    letter-spacing:5px;
-    color:#262730;
-}
-.subtitle{
-    text-align:center;
-    font-size:20px;
-    color:#555;
-    margin-top:-15px;
+/* ---------- Navbar ---------- */
+.navbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 6px 22px 6px;
+    border-bottom:1px solid #E5E7EB;
     margin-bottom:30px;
 }
+.navbar .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:20px;
+    color:var(--navy);
+}
+.navbar .brand-icon{
+    background:var(--gold);
+    color:var(--navy);
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+.navbar .badge{
+    background:var(--gold-light);
+    color:#8A6A1E;
+    border:1px solid #F0DBA0;
+    padding:6px 16px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
 
-/* Menu buttons get styled like pills via the stButton wrapper */
+/* Functional nav buttons row */
 div[data-testid="stHorizontalBlock"] button{
-    border-radius:30px !important;
-    border:2px solid #262730 !important;
-    font-weight:bold !important;
-    background:white !important;
-    color:#262730 !important;
-    transition:0.25s !important;
+    background:transparent !important;
+    border:none !important;
+    color:var(--navy) !important;
+    font-weight:600 !important;
+    font-size:15px !important;
+    box-shadow:none !important;
 }
 div[data-testid="stHorizontalBlock"] button:hover{
-    background:#1E88E5 !important;
-    color:white !important;
-    border-color:#1E88E5 !important;
+    color:var(--gold) !important;
 }
 
-.post{
-    background:white;
-    padding:35px;
-    border-radius:20px;
-    box-shadow:0px 8px 20px rgba(0,0,0,.15);
-    margin-bottom:25px;
-}
-.post h2{
-    margin-top:0;
-}
-
-.word{
-    margin-top:30px;
-    background:#E3F2FD;
-    border-left:8px solid #1E88E5;
-    padding:18px;
-    border-radius:10px;
-}
-
-.tag{
-    display:inline-block;
-    background:#FFF3CD;
-    color:#856404;
-    padding:3px 12px;
-    border-radius:20px;
+/* ---------- Eyebrow / section labels ---------- */
+.eyebrow{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--gold);
+    font-weight:700;
     font-size:13px;
-    font-weight:bold;
+    letter-spacing:1.5px;
+    margin-bottom:14px;
+}
+.eyebrow::before{
+    content:"";
+    width:24px;
+    height:2px;
+    background:var(--gold);
+    display:inline-block;
+}
+
+h1.serif, h2.serif{
+    font-family:'Playfair Display', serif;
+    color:var(--navy);
+    font-weight:700;
+    line-height:1.15;
+}
+
+/* ---------- Stat cards ---------- */
+.stat-card{
+    background:var(--gold-light);
+    border:1px solid #F0DBA0;
+    border-left:5px solid var(--gold);
+    border-radius:14px;
+    padding:18px 20px;
+}
+.stat-card .stat-icon{
+    font-size:20px;
+    margin-bottom:8px;
+}
+.stat-card .stat-number{
+    font-family:'Playfair Display', serif;
+    font-size:26px;
+    font-weight:700;
+    color:var(--navy);
+}
+.stat-card .stat-label{
+    color:#8A6A1E;
+    font-size:13px;
+}
+
+/* ---------- Generic content card ---------- */
+.card{
+    background:white;
+    border:1px solid #ECEEF2;
+    border-radius:16px;
+    padding:28px;
+    box-shadow:0 6px 18px rgba(27,42,74,.05);
+    margin-bottom:22px;
+}
+.card h2, .card h3{
+    font-family:'Playfair Display', serif;
+    color:var(--navy);
+}
+
+.icon-circle{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:var(--navy);
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    margin-bottom:14px;
+}
+
+.pill{
+    display:inline-block;
+    background:var(--gold-light);
+    color:#8A6A1E;
+    border:1px solid #F0DBA0;
+    padding:4px 14px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:700;
     margin-right:6px;
 }
 
-.caption{
-    text-align:center;
-    color:gray;
+.checkline{
+    color:var(--muted);
     font-size:14px;
+    margin:4px 0;
+}
+.checkline b{ color:var(--gold); }
+
+.word-box{
+    margin-top:24px;
+    background:var(--navy);
+    color:white;
+    border-left:6px solid var(--gold);
+    padding:20px;
+    border-radius:12px;
+}
+.word-box h4{ color:var(--gold); margin-top:0; }
+
+.caption-muted{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# DATA — vocabulary, grammar tips, writing posts
+# DATA
 # =========================================================
 VOCAB = [
     {"word": "Breathtaking", "meaning": "Something extremely beautiful or surprising.", "example": "The sunset over the mountains was breathtaking."},
@@ -125,39 +258,54 @@ GRAMMAR_TIPS = [
 
 POSTS = [
     {
-        "title": "📖 My First Day Writing in English",
+        "title": "My First Day Writing in English",
         "date": "Day 1",
         "tags": ["Writing", "Beginner"],
-        "body": """
-Welcome to my first blog post! I created this page to practice English every day and share my learning journey.
+        "body": """Welcome to my first blog post! I created this page to practice English every day and share my learning journey.
 
 **Today's Goals**
 - Write in English
 - Learn three new words
 - Practice grammar
-- Read an English article
-""",
+- Read an English article""",
         "word_of_day": VOCAB[0],
     },
     {
-        "title": "🗣️ Talking About My Weekend",
+        "title": "Talking About My Weekend",
         "date": "Day 5",
         "tags": ["Writing", "Speaking"],
-        "body": """
-This week I tried to describe my weekend out loud in English before writing it down. It's harder than it looks!
+        "body": """This week I tried to describe my weekend out loud in English before writing it down. It's harder than it looks!
 
-I went to the park, read a book, and called my sister. Small sentences, but real practice.
-""",
+I went to the park, read a book, and called my sister. Small sentences, but real practice.""",
         "word_of_day": VOCAB[1],
     },
     {
-        "title": "📝 Grammar Struggles: Present Perfect",
+        "title": "Grammar Struggles: Present Perfect",
         "date": "Day 9",
         "tags": ["Grammar"],
-        "body": """
-I keep mixing up Present Perfect and Past Simple. Today I studied the difference and wrote ten example sentences to fix it in my memory.
-""",
+        "body": """I keep mixing up Present Perfect and Past Simple. Today I studied the difference and wrote ten example sentences to fix it in my memory.""",
         "word_of_day": VOCAB[2],
+    },
+]
+
+JOURNEY = [
+    {
+        "icon": "🎓", "status": "Ongoing",
+        "title": "Letras: English Language & Literature",
+        "subtitle": "Universidade Federal · 2023 – present",
+        "items": ["Applied Linguistics", "English Literature I & II", "Pedagogy of Language Teaching", "Academic Writing in English"],
+    },
+    {
+        "icon": "📖", "status": "120 hours",
+        "title": "Teaching Internship — English",
+        "subtitle": "Escola Estadual [School Name] · 2025 – 2026",
+        "items": ["Classroom observation (40h)", "Co-teaching with supervising professor", "Lesson planning & curriculum design", "Student assessment support"],
+    },
+    {
+        "icon": "👥", "status": "Active",
+        "title": "University Participation",
+        "subtitle": "Academic Activities & Projects · 2023 – present",
+        "items": ["PIBID — Language Teaching Program", "Academic Writing Workshop", "English Literature Reading Group", "Student Body Representative"],
     },
 ]
 
@@ -187,17 +335,15 @@ My name is Maria. I'm an English student and this blog is where I document my le
     st.button("🌻 Follow My Journey", use_container_width=True)
 
 # =========================================================
-# HEADER
+# NAVBAR
 # =========================================================
-st.markdown("<div class='title'>ONLY ENGLISH TIME</div>", unsafe_allow_html=True)
-st.markdown(
-    "<div class='subtitle'>Blog for sharing my English learning experience</div>",
-    unsafe_allow_html=True,
-)
+st.markdown("""
+<div class="navbar">
+    <div class="brand"><span class="brand-icon">🌻</span> Only English Time</div>
+    <div class="badge">Letras · English · 2026</div>
+</div>
+""", unsafe_allow_html=True)
 
-# =========================================================
-# REAL NAVIGATION MENU (functional buttons)
-# =========================================================
 menu_cols = st.columns(5)
 menu_items = ["HOME", "VOCABULARY", "GRAMMAR", "WRITING", "ABOUT"]
 for col, item in zip(menu_cols, menu_items):
@@ -210,18 +356,40 @@ st.write("")
 # PAGE: HOME
 # =========================================================
 if st.session_state.page == "HOME":
+
+    st.markdown('<div class="eyebrow">ABOUT ME</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="serif">Future Educator, <i>Language Enthusiast</i></h1>', unsafe_allow_html=True)
+    st.write(
+        "I am an undergraduate student in English Language and Literature, currently documenting my "
+        "learning journey — the classrooms I have observed, the words I have learned, and the reflections "
+        "that continue to shape my understanding of what it truly means to learn (and teach) a language."
+    )
+
+    s1, s2, s3 = st.columns(3)
+    with s1:
+        st.markdown(f"""<div class="stat-card"><div class="stat-icon">📚</div>
+        <div class="stat-number">{len(POSTS)}</div><div class="stat-label">Blog Posts</div></div>""", unsafe_allow_html=True)
+    with s2:
+        st.markdown(f"""<div class="stat-card"><div class="stat-icon">📘</div>
+        <div class="stat-number">{len(VOCAB)}</div><div class="stat-label">Words Learned</div></div>""", unsafe_allow_html=True)
+    with s3:
+        st.markdown("""<div class="stat-card"><div class="stat-icon">🗓️</div>
+        <div class="stat-number">09</div><div class="stat-label">Days Studying</div></div>""", unsafe_allow_html=True)
+
+    st.write("")
     left, right = st.columns([2.2, 1])
 
     with left:
         post = POSTS[0]
-        tags_html = "".join(f"<span class='tag'>{t}</span>" for t in post["tags"])
+        tags_html = "".join(f"<span class='pill'>{t}</span>" for t in post["tags"])
+        body_html = post["body"].replace("\n", "<br>")
         st.markdown(f"""
-        <div class="post">
+        <div class="card">
             <h2>{post['title']}</h2>
-            <p><i>Published — {post['date']}</i></p>
+            <p class="caption-muted" style="text-align:left;">Published — {post['date']}</p>
             {tags_html}
-            <p>{post['body']}</p>
-            <div class="word">
+            <p>{body_html}</p>
+            <div class="word-box">
                 <h4>📘 Word of the Day</h4>
                 <b>{post['word_of_day']['word']}</b><br><br>
                 Meaning: {post['word_of_day']['meaning']}<br>
@@ -230,7 +398,7 @@ if st.session_state.page == "HOME":
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("### Recent Posts")
+        st.markdown('<div class="eyebrow">RECENT POSTS</div>', unsafe_allow_html=True)
         for p in POSTS[1:]:
             with st.container(border=True):
                 st.markdown(f"**{p['title']}**  \n*{p['date']}*")
@@ -244,30 +412,50 @@ if st.session_state.page == "HOME":
             "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=700",
             use_container_width=True,
         )
-        st.markdown("<p class='caption'>Learning English every day.</p>", unsafe_allow_html=True)
-        st.metric("Posts", str(len(POSTS)))
-        st.metric("Words Learned", str(len(VOCAB)))
-        st.metric("Days Studying", "09")
+        st.markdown("<p class='caption-muted'>Learning English every day.</p>", unsafe_allow_html=True)
 
     st.divider()
-    st.markdown("<center><h3>🌻 Let's Learn Together!</h3></center>", unsafe_allow_html=True)
+    st.markdown('<div class="eyebrow">ACADEMIC JOURNEY</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">Where I Have Been Learning</h2>', unsafe_allow_html=True)
+
+    j1, j2, j3 = st.columns(3)
+    for col, j in zip([j1, j2, j3], JOURNEY):
+        with col:
+            items_html = "".join(f"<div class='checkline'><b>✓</b> {i}</div>" for i in j["items"])
+            st.markdown(f"""
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="icon-circle">{j['icon']}</div>
+                    <span class="pill">{j['status']}</span>
+                </div>
+                <h3 style="margin-bottom:0;">{j['title']}</h3>
+                <p class="caption-muted" style="text-align:left; margin-top:2px;">{j['subtitle']}</p>
+                {items_html}
+            </div>
+            """, unsafe_allow_html=True)
 
 # =========================================================
 # PAGE: VOCABULARY
 # =========================================================
 elif st.session_state.page == "VOCABULARY":
-    st.markdown("## 📚 Vocabulary List")
+    st.markdown('<div class="eyebrow">VOCABULARY</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">Words I\'ve Learned</h2>', unsafe_allow_html=True)
     for v in VOCAB:
-        with st.container(border=True):
-            st.markdown(f"### {v['word']}")
-            st.write(f"**Meaning:** {v['meaning']}")
-            st.write(f"*Example:* {v['example']}")
+        st.markdown(f"""
+        <div class="card">
+            <div class="icon-circle">📘</div>
+            <h3>{v['word']}</h3>
+            <p><b>Meaning:</b> {v['meaning']}</p>
+            <p><i>Example: {v['example']}</i></p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # =========================================================
 # PAGE: GRAMMAR
 # =========================================================
 elif st.session_state.page == "GRAMMAR":
-    st.markdown("## 📖 Grammar Tips")
+    st.markdown('<div class="eyebrow">GRAMMAR</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">Grammar Tips</h2>', unsafe_allow_html=True)
     for g in GRAMMAR_TIPS:
         with st.expander(g["title"]):
             st.write(g["text"])
@@ -276,15 +464,17 @@ elif st.session_state.page == "GRAMMAR":
 # PAGE: WRITING
 # =========================================================
 elif st.session_state.page == "WRITING":
-    st.markdown("## ✍️ My Writing Practice")
+    st.markdown('<div class="eyebrow">WRITING</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">My Writing Practice</h2>', unsafe_allow_html=True)
     for p in POSTS:
-        tags_html = "".join(f"<span class='tag'>{t}</span>" for t in p["tags"])
+        tags_html = "".join(f"<span class='pill'>{t}</span>" for t in p["tags"])
+        body_html = p["body"].replace("\n", "<br>")
         st.markdown(f"""
-        <div class="post">
+        <div class="card">
             <h2>{p['title']}</h2>
-            <p><i>Published — {p['date']}</i></p>
+            <p class="caption-muted" style="text-align:left;">Published — {p['date']}</p>
             {tags_html}
-            <p>{p['body']}</p>
+            <p>{body_html}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -292,7 +482,9 @@ elif st.session_state.page == "WRITING":
 # PAGE: ABOUT
 # =========================================================
 elif st.session_state.page == "ABOUT":
-    st.markdown("## 👩 About Me")
+    st.markdown('<div class="eyebrow">ABOUT ME</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">Future Educator, <i>Language Enthusiast</i></h2>', unsafe_allow_html=True)
+
     col1, col2 = st.columns([1, 2])
     with col1:
         try:
@@ -310,3 +502,23 @@ elif st.session_state.page == "ABOUT":
         - Read one English article every day
         """)
         st.progress(35, text="Progress toward fluency goal")
+
+    st.write("")
+    st.markdown('<div class="eyebrow">ACADEMIC JOURNEY</div>', unsafe_allow_html=True)
+    st.markdown('<h2 class="serif">Where I Have Been Learning</h2>', unsafe_allow_html=True)
+
+    j1, j2, j3 = st.columns(3)
+    for col, j in zip([j1, j2, j3], JOURNEY):
+        with col:
+            items_html = "".join(f"<div class='checkline'><b>✓</b> {i}</div>" for i in j["items"])
+            st.markdown(f"""
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="icon-circle">{j['icon']}</div>
+                    <span class="pill">{j['status']}</span>
+                </div>
+                <h3 style="margin-bottom:0;">{j['title']}</h3>
+                <p class="caption-muted" style="text-align:left; margin-top:2px;">{j['subtitle']}</p>
+                {items_html}
+            </div>
+            """, unsafe_allow_html=True)
