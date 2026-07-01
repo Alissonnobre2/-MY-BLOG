@@ -266,28 +266,6 @@ h1.serif, h2.serif{
     font-weight:700;
     line-height:1.15;
 }
-/* ---------- Stat cards ---------- */
-.stat-card{
-    background:var(--gold-light);
-    border:1px solid #F0DBA0;
-    border-left:5px solid var(--gold);
-    border-radius:14px;
-    padding:18px 20px;
-}
-.stat-card .stat-icon{
-    font-size:20px;
-    margin-bottom:8px;
-}
-.stat-card .stat-number{
-    font-family:'Playfair Display', serif;
-    font-size:26px;
-    font-weight:700;
-    color:var(--navy);
-}
-.stat-card .stat-label{
-    color:#8A6A1E;
-    font-size:13px;
-}
 /* ---------- Generic content card ---------- */
 .card{
     background:white;
@@ -492,31 +470,20 @@ if st.session_state.page == "HOME":
         "projetos de intervenção para o ensino da língua inglesa em cursos livres**."
     )
 
+    # Fotos reais da jornada (prática de exercício, material didático, sala de aula)
     p1, p2, p3 = st.columns(3)
     with p1:
         st.markdown('<div class="home-photo">', unsafe_allow_html=True)
-        st.image("https://picsum.photos/seed/onlyenglishtime-books/500/350", use_container_width=True)
+        st.image("screen_exercise.jpg", use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
     with p2:
         st.markdown('<div class="home-photo">', unsafe_allow_html=True)
-        st.image("https://picsum.photos/seed/onlyenglishtime-classroom/500/350", use_container_width=True)
+        st.image("textbook.jpg", use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
     with p3:
         st.markdown('<div class="home-photo">', unsafe_allow_html=True)
-        st.image("https://picsum.photos/seed/onlyenglishtime-campus/500/350", use_container_width=True)
+        st.image("classroom.jpg", use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
-    st.write("")
-    s1, s2, s3 = st.columns(3)
-    with s1:
-        st.markdown(f"""<div class="stat-card"><div class="stat-icon">🎓</div>
-        <div class="stat-number">{len(st.session_state.ACADEMIC_WORK)}</div><div class="stat-label">Academic Deliverables</div></div>""", unsafe_allow_html=True)
-    with s2:
-        st.markdown(f"""<div class="stat-card"><div class="stat-icon">📘</div>
-        <div class="stat-number">{len(st.session_state.VOCAB)}</div><div class="stat-label">Words Learned</div></div>""", unsafe_allow_html=True)
-    with s3:
-        st.markdown("""<div class="stat-card"><div class="stat-icon">👩‍🏫</div>
-        <div class="stat-number">6mo</div><div class="stat-label">Teaching Experience</div></div>""", unsafe_allow_html=True)
 
     st.write("")
     left, right = st.columns([2.2, 1])
@@ -547,7 +514,7 @@ if st.session_state.page == "HOME":
         """, unsafe_allow_html=True)
     with right:
         st.image(
-            "https://picsum.photos/seed/onlyenglishtime-hero/700/900",
+            "classroom.jpg",
             use_container_width=True,
         )
         st.markdown("<p class='caption-muted'>Learning — and teaching — English every day.</p>", unsafe_allow_html=True)
