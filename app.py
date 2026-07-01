@@ -495,38 +495,30 @@ if st.session_state.page == "HOME":
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.write("")
-    left, right = st.columns([2.2, 1])
-    with left:
-        st.markdown('<div class="eyebrow">FROM MY INTERNSHIP — ESTÁGIO I</div>', unsafe_allow_html=True)
-        for key, work in st.session_state.ACADEMIC_WORK.items():
-            with st.container(border=True):
-                st.markdown(f"**{work['title']}** \n*{work['subtitle']}*")
-                st.markdown(status_pill(work["status"]), unsafe_allow_html=True)
-                if st.button("Read more →", key=f"home_read_{key}"):
-                    # Redireciona para as novas páginas correspondentes
-                    if key == "creed":
-                        go_to("PEDAGOGICAL CREED")
-                    elif key == "pip":
-                        go_to("PEDAGOGICAL INTERVENTION PLAN")
-                    elif key == "observation":
-                        go_to("OBSERVATION REPORT")
-                    st.rerun()
+    st.markdown('<div class="eyebrow">FROM MY INTERNSHIP — ESTÁGIO I</div>', unsafe_allow_html=True)
+    for key, work in st.session_state.ACADEMIC_WORK.items():
+        with st.container(border=True):
+            st.markdown(f"**{work['title']}** \n*{work['subtitle']}*")
+            st.markdown(status_pill(work["status"]), unsafe_allow_html=True)
+            if st.button("Read more →", key=f"home_read_{key}"):
+                # Redireciona para as novas páginas correspondentes
+                if key == "creed":
+                    go_to("PEDAGOGICAL CREED")
+                elif key == "pip":
+                    go_to("PEDAGOGICAL INTERVENTION PLAN")
+                elif key == "observation":
+                    go_to("OBSERVATION REPORT")
+                st.rerun()
 
-        word_obj = st.session_state.VOCAB[0] if st.session_state.VOCAB else {"word": "---", "meaning": "---", "example": "---"}
-        st.markdown(f"""
-        <div class="word-box">
-            <h4>📘 Word of the Day</h4>
-            <b>{word_obj['word']}</b><br><br>
-            Meaning: {word_obj['meaning']}<br>
-            <i>Example: {word_obj['example']}</i>
-        </div>
-        """, unsafe_allow_html=True)
-    with right:
-        try:
-            st.image("classroom.jpg", use_container_width=True)
-        except Exception:
-            st.warning("Add the file classroom.jpg")
-        st.markdown("<p class='caption-muted'>Learning — and teaching — English every day.</p>", unsafe_allow_html=True)
+    word_obj = st.session_state.VOCAB[0] if st.session_state.VOCAB else {"word": "---", "meaning": "---", "example": "---"}
+    st.markdown(f"""
+    <div class="word-box">
+        <h4>📘 Word of the Day</h4>
+        <b>{word_obj['word']}</b><br><br>
+        Meaning: {word_obj['meaning']}<br>
+        <i>Example: {word_obj['example']}</i>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.divider()
     st.markdown('<div class="eyebrow">ACADEMIC JOURNEY</div>', unsafe_allow_html=True)
