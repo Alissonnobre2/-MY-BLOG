@@ -474,15 +474,24 @@ if st.session_state.page == "HOME":
     p1, p2, p3 = st.columns(3)
     with p1:
         st.markdown('<div class="home-photo">', unsafe_allow_html=True)
-        st.image("screen_exercise.jpg", use_container_width=True)
+        try:
+            st.image("screen_exercise.jpg", use_container_width=True)
+        except Exception:
+            st.warning("Add the file screen_exercise.jpg")
         st.markdown("</div>", unsafe_allow_html=True)
     with p2:
         st.markdown('<div class="home-photo">', unsafe_allow_html=True)
-        st.image("textbook.jpg", use_container_width=True)
+        try:
+            st.image("textbook.jpg", use_container_width=True)
+        except Exception:
+            st.warning("Add the file textbook.jpg")
         st.markdown("</div>", unsafe_allow_html=True)
     with p3:
         st.markdown('<div class="home-photo">', unsafe_allow_html=True)
-        st.image("classroom.jpg", use_container_width=True)
+        try:
+            st.image("classroom.jpg", use_container_width=True)
+        except Exception:
+            st.warning("Add the file classroom.jpg")
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.write("")
@@ -513,10 +522,10 @@ if st.session_state.page == "HOME":
         </div>
         """, unsafe_allow_html=True)
     with right:
-        st.image(
-            "classroom.jpg",
-            use_container_width=True,
-        )
+        try:
+            st.image("classroom.jpg", use_container_width=True)
+        except Exception:
+            st.warning("Add the file classroom.jpg")
         st.markdown("<p class='caption-muted'>Learning — and teaching — English every day.</p>", unsafe_allow_html=True)
 
     st.divider()
