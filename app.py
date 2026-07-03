@@ -1,4 +1,5 @@
 import streamlit as st
+import json
 
 # =========================================================
 # CONFIG
@@ -10,15 +11,64 @@ st.set_page_config(
 )
 
 # =========================================================
-# SESSION STATE
+# SESSION STATE — page / edit mode / open editors
 # =========================================================
 if "page" not in st.session_state:
     st.session_state.page = "HOME"
 if "edit_mode" not in st.session_state:
     st.session_state.edit_mode = False
+if "open_editors" not in st.session_state:
+    st.session_state.open_editors = set()  # which pencil panels are expanded
 
 def go_to(page_name: str):
     st.session_state.page = page_name
+
+def toggle_editor(key: str):
+    if key in st.session_state.open_editors:
+        st.session_state.open_editors.discard(key)
+    else:
+        st.session_state.open_editors.add(key)
+
+def pencil(key: str, label: str = ""):
+    """Renders a small pencil button. Returns True if its editor panel is open."""
+    if not st.session_state.edit_mode:
+        return False
+    st.button(f"✏️ {label}".strip(), key=f"pencil_{key}", on_click=toggle_editor, args=(key,))
+    return key in st.session_state.open_editors
+
+# =========================================================
+# DEFAULT CONTENT
+# =========================================================
+if "HOME_INTRO" not in st.session_state:
+    st.session_state.HOME_INTRO = (
+        "A 5th semester English student and teacher at the beginning of her journey, sharing my experiences "
+        "from the observational internship for the course **HL 0070 — Estágio I: Observação e elaboração de "
+        "projetos de intervenção para o ensino da língua inglesa em cursos livres**."
+    )
+
+if "ABOUT_INFO" not in st.session_state:
+    st.session_state.ABOUT_INFO = {
+        "name": "Ana Sigrid",
+        "role": "Letras: English Language & Literature — UFC",
+        "bio": (
+            "Hello! I'm a 5th semester English student at Universidade Federal do Ceará and an English teacher "
+            "with around 6 months of experience working with kids aged 6–10 in a bilingual CLIL environment.\n\n"
+            "I'm currently completing **Estágio I (HL 0070)**, an observational internship at CCI Benfica, where "
+            "I have been exploring the real dynamics of English instruction in a free-course setting — observing "
+            "classes, writing a pedagogical creed, and co-authoring an intervention plan to encourage oral "
+            "production in English.\n\n"
+            "This blog is where I document that journey: the theories I've questioned, the classrooms I've "
+            "observed, and the reflections shaping my understanding of what it truly means to teach a language."
+        ),
+        "email": "your.email@example.com",
+        "linkedin": "https://linkedin.com",
+        "university": "Universidade Federal do Ceará (UFC)",
+        "location": "Fortaleza, CE — Brazil",
+        "stat1_num": "5th", "stat1_lbl": "Semester · Letras",
+        "stat2_num": "~6mo", "stat2_lbl": "Teaching Experience",
+        "stat3_num": "3×", "stat3_lbl": "Classes / Week",
+        "stat4_num": "2", "stat4_lbl": "Academic Works",
+    }
 
 if "VOCAB" not in st.session_state:
     st.session_state.VOCAB = [
@@ -88,6 +138,25 @@ if "JOURNEY" not in st.session_state:
     ]
 
 # =========================================================
+# BACKUP HELPERS (session_state is temporary on Streamlit Cloud)
+# =========================================================
+BACKUP_KEYS = ["HOME_INTRO", "ABOUT_INFO", "VOCAB", "GRAMMAR_TIPS", "ACADEMIC_WORK", "JOURNEY"]
+
+def export_backup() -> str:
+    data = {k: st.session_state[k] for k in BACKUP_KEYS}
+    return json.dumps(data, ensure_ascii=False, indent=2)
+
+def import_backup(file) -> bool:
+    try:
+        data = json.load(file)
+        for k in BACKUP_KEYS:
+            if k in data:
+                st.session_state[k] = data[k]
+        return True
+    except Exception:
+        return False
+
+# =========================================================
 # CSS
 # =========================================================
 st.markdown("""
@@ -122,8 +191,8 @@ section[data-testid="stSidebar"] button{
 .navbar .brand-icon{ background:var(--gold); color:var(--navy); width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; }
 .navbar .badge{ background:var(--gold-light); color:#8A6A1E; border:1px solid #F0DBA0; padding:6px 16px; border-radius:30px; font-size:13px; font-weight:600; }
 
-div[data-testid="stHorizontalBlock"] button{ background:transparent !important; border:none !important; color:var(--navy) !important; font-weight:600 !important; font-size:15px !important; box-shadow:none !important; }
-div[data-testid="stHorizontalBlock"] button:hover{ color:var(--gold) !important; }
+div[data-testid="stHorizontalBlock"] > div button{ background:transparent !important; border:none !important; color:var(--navy) !important; font-weight:600 !important; font-size:15px !important; box-shadow:none !important; }
+div[data-testid="stHorizontalBlock"] > div button:hover{ color:var(--gold) !important; }
 
 .eyebrow{ display:flex; align-items:center; gap:10px; color:var(--gold); font-weight:700; font-size:13px; letter-spacing:1.5px; margin-bottom:14px; }
 .eyebrow::before{ content:""; width:24px; height:2px; background:var(--gold); display:inline-block; }
@@ -142,10 +211,14 @@ h1.serif, h2.serif{ font-family:'Playfair Display',serif; color:var(--navy); fon
 .word-box h4{ color:var(--gold); margin-top:0; }
 .caption-muted{ color:var(--muted); font-size:13px; }
 
-.about-card{ background:white; border:1px solid #ECEEF2; border-radius:16px; padding:32px; box-shadow:0 6px 18px rgba(27,42,74,.05); margin-bottom:22px; }
 .about-stat{ background:var(--gold-light); border:1px solid #F0DBA0; border-left:5px solid var(--gold); border-radius:14px; padding:18px 20px; text-align:center; }
 .about-stat .num{ font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--navy); }
 .about-stat .lbl{ color:#8A6A1E; font-size:13px; margin-top:4px; }
+
+.edit-banner{ background:#FFF3CD; border:1px solid #F0DBA0; color:#856404; padding:10px 18px; border-radius:10px; font-size:14px; margin-bottom:18px; }
+
+/* Pencil buttons: small, subtle, inline */
+button[kind="secondary"][data-testid="baseButton-secondary"]{ }
 </style>
 """, unsafe_allow_html=True)
 
@@ -158,11 +231,9 @@ def status_pill(status: str) -> str:
         return f"<span class='pill-progress'>{status}</span>"
     return f"<span class='pill-done'>{status}</span>"
 
-# FIX: render_academic_card sem tentar fechar div HTML em volta de st.expander
-def render_academic_card(work: dict):
+def render_academic_card(work: dict, work_key: str):
     tags_html = "".join(f"<span class='pill'>{t}</span>" for t in work.get("tags", []))
     authors_line = f"<p class='caption-muted'>{work['authors']}</p>" if work.get("authors") else ""
-    # HTML sem indentação interna — evita que o parser Markdown trate como código
     header = (
         "<div class='card'>"
         "<div style='display:flex;justify-content:space-between;align-items:flex-start;'>"
@@ -176,9 +247,31 @@ def render_academic_card(work: dict):
         "</div>"
     )
     st.markdown(header, unsafe_allow_html=True)
-    for sec in work["sections"]:
+
+    if pencil(f"work_{work_key}_header", "Edit title / info"):
+        with st.container(border=True):
+            work["title"] = st.text_input("Title", work["title"], key=f"{work_key}_title")
+            work["subtitle"] = st.text_input("Subtitle", work["subtitle"], key=f"{work_key}_subtitle")
+            work["date"] = st.text_input("Date / Course", work["date"], key=f"{work_key}_date")
+            work["status"] = st.selectbox("Status", ["Completed", "In Progress"],
+                index=0 if work["status"] == "Completed" else 1, key=f"{work_key}_status")
+            tags_text = st.text_input("Tags (comma separated)", ", ".join(work.get("tags", [])), key=f"{work_key}_tags")
+            work["tags"] = [t.strip() for t in tags_text.split(",") if t.strip()]
+            work["authors"] = st.text_input("Authors / credits (optional)", work.get("authors", ""), key=f"{work_key}_authors")
+
+    for i, sec in enumerate(work["sections"]):
         with st.expander(sec["heading"], expanded=(len(work["sections"]) == 1)):
             st.write(sec["text"])
+            if pencil(f"work_{work_key}_sec_{i}", "Edit this section"):
+                sec["heading"] = st.text_input("Heading", sec["heading"], key=f"{work_key}_h_{i}")
+                sec["text"] = st.text_area("Text (markdown, use links like [text](url))", sec["text"], key=f"{work_key}_t_{i}", height=150)
+
+    if st.session_state.edit_mode:
+        c1, c2 = st.columns([1, 3])
+        with c1:
+            if st.button("➕ Add section", key=f"{work_key}_add_sec"):
+                work["sections"].append({"heading": "New section", "text": "Write here..."})
+                st.rerun()
 
 # =========================================================
 # SIDEBAR
@@ -188,40 +281,46 @@ with st.sidebar:
     st.markdown("---")
 
     if st.session_state.edit_mode:
-        st.markdown("### 🛠️ Panel Editor")
-        with st.expander("🎓 Manage Academic Work"):
-            work_key = st.selectbox(
-                "Select Document",
-                options=list(st.session_state.ACADEMIC_WORK.keys()),
-                format_func=lambda k: st.session_state.ACADEMIC_WORK[k]["title"],
-            )
-            work = st.session_state.ACADEMIC_WORK[work_key]
-            work["title"] = st.text_input("Title", work["title"], key=f"{work_key}_title")
-            work["subtitle"] = st.text_input("Subtitle", work["subtitle"], key=f"{work_key}_subtitle")
-            work["date"] = st.text_input("Date / Course", work["date"], key=f"{work_key}_date")
-            work["status"] = st.selectbox("Status", ["Completed", "In Progress"],
-                index=0 if work["status"] == "Completed" else 1, key=f"{work_key}_status")
-            for i, sec in enumerate(work["sections"]):
-                sec["heading"] = st.text_input(f"Section {i+1} heading", sec["heading"], key=f"{work_key}_h_{i}")
-                sec["text"] = st.text_area(f"Section {i+1} text", sec["text"], key=f"{work_key}_t_{i}", height=120)
+        st.markdown("### 🛠️ Editing is ON")
+        st.caption("Pencil icons (✏️) now appear next to editable content on every page.")
 
+        st.markdown("---")
+        st.markdown("### 💾 Backup")
+        st.caption(
+            "Streamlit Cloud storage is temporary — if the app restarts, "
+            "edits made here can be lost. Download a backup and re-upload it "
+            "next time you open the app to keep your changes."
+        )
+        st.download_button(
+            "⬇️ Download backup (content.json)",
+            data=export_backup(),
+            file_name="content.json",
+            mime="application/json",
+            use_container_width=True,
+        )
+        uploaded = st.file_uploader("⬆️ Restore backup", type="json", key="backup_uploader")
+        if uploaded is not None:
+            if st.button("Apply this backup", use_container_width=True):
+                if import_backup(uploaded):
+                    st.success("Backup restored!")
+                    st.rerun()
+                else:
+                    st.error("Couldn't read that file.")
+
+        st.markdown("---")
         with st.expander("📘 Manage Vocabulary"):
-            vocab_words = [v["word"] for v in st.session_state.VOCAB]
-            sel_v = vocab_words.index(st.selectbox("Select Word", vocab_words))
-            st.session_state.VOCAB[sel_v]["word"] = st.text_input("Word", st.session_state.VOCAB[sel_v]["word"])
-            st.session_state.VOCAB[sel_v]["meaning"] = st.text_input("Meaning", st.session_state.VOCAB[sel_v]["meaning"])
-            st.session_state.VOCAB[sel_v]["example"] = st.text_input("Example", st.session_state.VOCAB[sel_v]["example"])
-            if st.button("➕ Add New Blank Word"):
+            for idx, v in enumerate(st.session_state.VOCAB):
+                st.markdown(f"**Word {idx+1}**")
+                v["word"] = st.text_input("Word", v["word"], key=f"sb_v_word_{idx}")
+                v["meaning"] = st.text_input("Meaning", v["meaning"], key=f"sb_v_meaning_{idx}")
+                v["example"] = st.text_input("Example", v["example"], key=f"sb_v_example_{idx}")
+                if st.button(f"🗑️ Remove", key=f"sb_v_remove_{idx}"):
+                    st.session_state.VOCAB.pop(idx)
+                    st.rerun()
+                st.markdown("—")
+            if st.button("➕ Add New Word"):
                 st.session_state.VOCAB.append({"word": "New Word", "meaning": "Meaning", "example": "Example"})
                 st.rerun()
-
-        with st.expander("🧭 Manage Academic Journey"):
-            j_titles = [j["title"] for j in st.session_state.JOURNEY]
-            sel_j = j_titles.index(st.selectbox("Select Journey Card", j_titles))
-            st.session_state.JOURNEY[sel_j]["title"] = st.text_input("Card Title", st.session_state.JOURNEY[sel_j]["title"])
-            st.session_state.JOURNEY[sel_j]["status"] = st.text_input("Status", st.session_state.JOURNEY[sel_j]["status"])
-            st.session_state.JOURNEY[sel_j]["subtitle"] = st.text_input("Institution / Date", st.session_state.JOURNEY[sel_j]["subtitle"])
-            st.session_state.JOURNEY[sel_j]["items"] = st.text_area("Items (one per line)", st.session_state.JOURNEY[sel_j]["items"])
     else:
         st.markdown("## 👩 About Me")
         try:
@@ -229,9 +328,9 @@ with st.sidebar:
         except Exception:
             st.warning("Add the file student.jpg")
         st.markdown("---")
-        st.write("""
+        st.write(f"""
 Hello! 👋
-My name is Ana Sigrid. I'm a Letras/Inglês student at UFC (5th semester) and an English teacher,
+My name is {st.session_state.ABOUT_INFO['name']}. I'm a Letras/Inglês student at UFC (5th semester) and an English teacher,
 currently completing my Estágio I observational internship.
 
 **Here you'll find:**
@@ -261,17 +360,25 @@ for col, item in zip(menu_cols, menu_items):
 
 st.write("")
 
+if st.session_state.edit_mode:
+    st.markdown(
+        "<div class='edit-banner'>✏️ Edit Mode is ON — click any pencil to edit that section. "
+        "Remember to download the backup in the sidebar so your changes aren't lost if the app restarts.</div>",
+        unsafe_allow_html=True,
+    )
+
 # =========================================================
 # PAGE: HOME
 # =========================================================
 if st.session_state.page == "HOME":
     st.markdown('<div class="eyebrow">ABOUT ME</div>', unsafe_allow_html=True)
     st.markdown('<h1 class="serif">Future Educator, <i>Language Enthusiast</i></h1>', unsafe_allow_html=True)
-    st.write(
-        "A 5th semester English student and teacher at the beginning of her journey, sharing my experiences "
-        "from the observational internship for the course **HL 0070 — Estágio I: Observação e elaboração de "
-        "projetos de intervenção para o ensino da língua inglesa em cursos livres**."
-    )
+    st.write(st.session_state.HOME_INTRO)
+    if pencil("home_intro", "Edit intro text"):
+        st.session_state.HOME_INTRO = st.text_area(
+            "Intro paragraph (markdown supported — use **bold** or [links](https://example.com))",
+            st.session_state.HOME_INTRO, key="home_intro_input", height=100,
+        )
 
     p1, p2, p3 = st.columns(3)
     for col, fname in zip([p1, p2, p3], ["screen_exercise.jpg", "textbook.jpg", "classroom.jpg"]):
@@ -302,12 +409,17 @@ if st.session_state.page == "HOME":
         "</div>",
         unsafe_allow_html=True,
     )
+    if pencil("home_word_of_day", "Edit word of the day"):
+        if st.session_state.VOCAB:
+            st.session_state.VOCAB[0]["word"] = st.text_input("Word", st.session_state.VOCAB[0]["word"], key="hw_word")
+            st.session_state.VOCAB[0]["meaning"] = st.text_input("Meaning", st.session_state.VOCAB[0]["meaning"], key="hw_meaning")
+            st.session_state.VOCAB[0]["example"] = st.text_input("Example", st.session_state.VOCAB[0]["example"], key="hw_example")
 
     st.divider()
     st.markdown('<div class="eyebrow">ACADEMIC JOURNEY</div>', unsafe_allow_html=True)
     st.markdown('<h2 class="serif">Where I Have Been Learning</h2>', unsafe_allow_html=True)
     j1, j2, j3 = st.columns(3)
-    for col, j in zip([j1, j2, j3], st.session_state.JOURNEY):
+    for idx, (col, j) in enumerate(zip([j1, j2, j3], st.session_state.JOURNEY)):
         with col:
             lines = j["items"].split("\n")
             items_html = "".join(f"<div class='checkline'><b>✓</b> {l}</div>" for l in lines if l.strip())
@@ -323,32 +435,39 @@ if st.session_state.page == "HOME":
                 "</div>",
                 unsafe_allow_html=True,
             )
+            if pencil(f"journey_{idx}", "Edit this card"):
+                j["icon"] = st.text_input("Icon (emoji)", j["icon"], key=f"j_icon_{idx}")
+                j["status"] = st.text_input("Status", j["status"], key=f"j_status_{idx}")
+                j["title"] = st.text_input("Title", j["title"], key=f"j_title_{idx}")
+                j["subtitle"] = st.text_input("Subtitle", j["subtitle"], key=f"j_subtitle_{idx}")
+                j["items"] = st.text_area("Items (one per line)", j["items"], key=f"j_items_{idx}")
 
 # =========================================================
 # PAGE: PEDAGOGICAL CREED
 # =========================================================
 elif st.session_state.page == "PEDAGOGICAL CREED":
     st.markdown('<div class="eyebrow">ESTÁGIO I — HL 0070</div>', unsafe_allow_html=True)
-    render_academic_card(st.session_state.ACADEMIC_WORK["creed"])
+    render_academic_card(st.session_state.ACADEMIC_WORK["creed"], "creed")
 
 # =========================================================
 # PAGE: PEDAGOGICAL INTERVENTION PLAN
 # =========================================================
 elif st.session_state.page == "PEDAGOGICAL INTERVENTION PLAN":
     st.markdown('<div class="eyebrow">ESTÁGIO I — HL 0070</div>', unsafe_allow_html=True)
-    render_academic_card(st.session_state.ACADEMIC_WORK["pip"])
+    render_academic_card(st.session_state.ACADEMIC_WORK["pip"], "pip")
 
 # =========================================================
 # PAGE: OBSERVATION REPORT
 # =========================================================
 elif st.session_state.page == "OBSERVATION REPORT":
     st.markdown('<div class="eyebrow">ESTÁGIO I — HL 0070</div>', unsafe_allow_html=True)
-    render_academic_card(st.session_state.ACADEMIC_WORK["observation"])
+    render_academic_card(st.session_state.ACADEMIC_WORK["observation"], "observation")
 
 # =========================================================
-# PAGE: ABOUT  ← FIX: conteúdo real
+# PAGE: ABOUT
 # =========================================================
 elif st.session_state.page == "ABOUT":
+    A = st.session_state.ABOUT_INFO
     st.markdown('<div class="eyebrow">ABOUT ME</div>', unsafe_allow_html=True)
     st.markdown('<h2 class="serif">My Profile</h2>', unsafe_allow_html=True)
 
@@ -359,35 +478,39 @@ elif st.session_state.page == "ABOUT":
         except Exception:
             st.info("📷 Add student.jpg")
     with col_bio:
-        st.markdown("""
-**Ana Sigrid**
-*Letras: English Language & Literature — UFC*
-
-Hello! I'm a 5th semester English student at Universidade Federal do Ceará and an English teacher with around 6 months of experience working with kids aged 6–10 in a bilingual CLIL environment.
-
-I'm currently completing **Estágio I (HL 0070)**, an observational internship at CCI Benfica, where I have been exploring the real dynamics of English instruction in a free-course setting — observing classes, writing a pedagogical creed, and co-authoring an intervention plan to encourage oral production in English.
-
-This blog is where I document that journey: the theories I've questioned, the classrooms I've observed, and the reflections shaping my understanding of what it truly means to teach a language.
-        """)
+        st.markdown(f"**{A['name']}**  \n*{A['role']}*")
+        st.write(A["bio"])
+        if pencil("about_bio", "Edit name / role / bio"):
+            A["name"] = st.text_input("Name", A["name"], key="a_name")
+            A["role"] = st.text_input("Role / program", A["role"], key="a_role")
+            A["bio"] = st.text_area(
+                "Bio (markdown supported — use [link text](https://url.com) to add links)",
+                A["bio"], key="a_bio", height=180,
+            )
 
     st.write("")
     a1, a2, a3, a4 = st.columns(4)
-    for col, num, lbl in zip(
-        [a1, a2, a3, a4],
-        ["5th", "~6mo", "3×", "2"],
-        ["Semester · Letras", "Teaching Experience", "Classes / Week", "Academic Works"],
-    ):
+    stat_cols = [a1, a2, a3, a4]
+    for i, col in enumerate(stat_cols, start=1):
         with col:
             st.markdown(
-                f"<div class='about-stat'><div class='num'>{num}</div><div class='lbl'>{lbl}</div></div>",
+                f"<div class='about-stat'><div class='num'>{A[f'stat{i}_num']}</div>"
+                f"<div class='lbl'>{A[f'stat{i}_lbl']}</div></div>",
                 unsafe_allow_html=True,
             )
+    if pencil("about_stats", "Edit stats"):
+        for i in range(1, 5):
+            c1, c2 = st.columns(2)
+            with c1:
+                A[f"stat{i}_num"] = st.text_input(f"Stat {i} number", A[f"stat{i}_num"], key=f"a_s{i}n")
+            with c2:
+                A[f"stat{i}_lbl"] = st.text_input(f"Stat {i} label", A[f"stat{i}_lbl"], key=f"a_s{i}l")
 
     st.write("")
     st.markdown('<div class="eyebrow">ACADEMIC JOURNEY</div>', unsafe_allow_html=True)
     st.markdown('<h2 class="serif">Where I Have Been Learning</h2>', unsafe_allow_html=True)
     j1, j2, j3 = st.columns(3)
-    for col, j in zip([j1, j2, j3], st.session_state.JOURNEY):
+    for idx, (col, j) in enumerate(zip([j1, j2, j3], st.session_state.JOURNEY)):
         with col:
             lines = j["items"].split("\n")
             items_html = "".join(f"<div class='checkline'><b>✓</b> {l}</div>" for l in lines if l.strip())
@@ -403,6 +526,12 @@ This blog is where I document that journey: the theories I've questioned, the cl
                 "</div>",
                 unsafe_allow_html=True,
             )
+            if pencil(f"about_journey_{idx}", "Edit this card"):
+                j["icon"] = st.text_input("Icon (emoji)", j["icon"], key=f"aj_icon_{idx}")
+                j["status"] = st.text_input("Status", j["status"], key=f"aj_status_{idx}")
+                j["title"] = st.text_input("Title", j["title"], key=f"aj_title_{idx}")
+                j["subtitle"] = st.text_input("Subtitle", j["subtitle"], key=f"aj_subtitle_{idx}")
+                j["items"] = st.text_area("Items (one per line)", j["items"], key=f"aj_items_{idx}")
 
     st.write("")
     st.markdown('<div class="eyebrow">CONTACT</div>', unsafe_allow_html=True)
@@ -410,8 +539,13 @@ This blog is where I document that journey: the theories I've questioned, the cl
     st.write("Feel free to reach out — I'm always happy to connect with fellow educators and learners!")
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown("📧 **Email:** your.email@example.com")
-        st.markdown("🎓 **University:** Universidade Federal do Ceará (UFC)")
+        st.markdown(f"📧 **Email:** {A['email']}")
+        st.markdown(f"🎓 **University:** {A['university']}")
     with c2:
-        st.markdown("💼 **LinkedIn:** [Your LinkedIn](https://linkedin.com)")
-        st.markdown("🌍 **Location:** Fortaleza, CE — Brazil")
+        st.markdown(f"💼 **LinkedIn:** [{A['linkedin']}]({A['linkedin']})")
+        st.markdown(f"🌍 **Location:** {A['location']}")
+    if pencil("about_contact", "Edit contact info"):
+        A["email"] = st.text_input("Email", A["email"], key="a_email")
+        A["linkedin"] = st.text_input("LinkedIn URL", A["linkedin"], key="a_linkedin")
+        A["university"] = st.text_input("University", A["university"], key="a_university")
+        A["location"] = st.text_input("Location", A["location"], key="a_location")
